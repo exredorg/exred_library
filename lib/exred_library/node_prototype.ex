@@ -1,12 +1,29 @@
 defmodule Exred.Library.NodePrototype do
   @moduledoc """
   Behaviour to define node prototypes
+  
+  ##Callbacks:
+  ###node_init(state :: term) :: term
+    Gets called when a node instance is deployed.
+    It should set up the initial state, establish connections, etc.
+    (basically do anything that should be done in a GenServer init)
+  
+  ###handle_msg(msg :: term, state :: term) :: {term, term}
+    This is where the node's function is implemented.
+    The incoming messages get processed here.
+    It should return the outgoing message and the new state.
+    
+    If it returns 'nil' as the message then no message will be sent"
   """
 
   @name "NodePrototype"
   @category "Undefined"
   @config %{}
-  @info "Node prototype info"
+  @info @moduledoc
+
+  # icon names are the standard material design icons
+  @ui_attributes %{fire_button: false, left_icon: "thumb_up", right_icon: nil }
+
 
   @doc """
   This gets called when the module is loaded.
@@ -31,7 +48,8 @@ defmodule Exred.Library.NodePrototype do
           name: @name,
           category: @category,
           info: @info,
-          config: @config
+          config: @config,
+          ui_attributes: @ui_attributes
         }
       end
 
@@ -101,7 +119,9 @@ defmodule Exred.Library.NodePrototype do
       @impl true
       def handle_info(msg, state) do
         {msg_out, new_state} = handle_msg(msg, state)
-        Enum.each state.out_nodes, & send(&1, msg_out)
+        if msg_out != nil do
+          Enum.each state.out_nodes, & send(&1, msg_out)
+        end
         {:noreply, new_state}
       end
       

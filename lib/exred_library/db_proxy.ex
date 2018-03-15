@@ -28,7 +28,8 @@ defmodule Exred.Library.DbProxy do
       {:ok, res} ->
         {:reply, {:ok, res}, pid}
       {:error, err} ->
-        Logger.warn "#{inspect err.postgres}"
+        err_short = Map.take(err.postgres, [:code, :table, :detail])
+        Logger.warn "#{inspect err_short}"
         {:reply, {:error, err}, pid}
     end
   end

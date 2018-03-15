@@ -12,11 +12,11 @@ defmodule Exred.Library do
   Get all node instances from the database
   """
   def get_all_nodes do
-    query_stm = "select id, name, module, config, flow_id from nodes where not is_prototype;"
+    query_stm = "select id, name, category, module, config, flow_id from nodes where not is_prototype;"
     {:ok, result} = DbProxy.query query_stm, []
 
     # convert result from db to node struct
-    Enum.map result.rows, fn([id, name, module, config, flow_id]) ->
+    Enum.map result.rows, fn([id, name, category, module, config, flow_id]) ->
 
       node_id = id |> UUID.binary_to_string! |> String.to_atom
       node_module = String.to_existing_atom module
@@ -26,6 +26,7 @@ defmodule Exred.Library do
       %Node{
         id: node_id,
         name: name,
+        category: category,
         module: node_module,
         config: node_config,
         flow_id: flow_id

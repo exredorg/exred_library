@@ -60,8 +60,8 @@ defmodule Exred.Library.Registrar do
     id = UUID.uuid4() |> UUID.string_to_binary!
     timestamp = DateTime.utc_now() |> DateTime.to_naive
 
-    query_statement = "insert into nodes(id, type, name, module, category, info, config, is_prototype, inserted_at, updated_at) values($1, 'node', $2, $3, $4, $5, $6, true, $7, $8)"
-    query_params = [id, node_attributes.name, Atom.to_string(module_name), node_attributes.category, node_attributes.info, node_attributes.config, timestamp, timestamp]
+    query_statement = "insert into nodes(id, type, name, module, category, info, config, ui_attributes, is_prototype, inserted_at, updated_at) values($1, 'node', $2, $3, $4, $5, $6, $7, true, $8, $9)"
+    query_params = [id, node_attributes.name, Atom.to_string(module_name), node_attributes.category, node_attributes.info, node_attributes.config, node_attributes.ui_attributes, timestamp, timestamp]
 
     case DbProxy.query(query_statement, query_params) do
       {:ok, _} -> :ok
