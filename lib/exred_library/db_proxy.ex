@@ -20,7 +20,19 @@ defmodule Exred.Library.DbProxy do
   # Callbacks
 
   def init(_args) do
-    Postgrex.start_link hostname: "localhost", username: "zkeszthelyi", password: "", database: "exred_dev", types: Exred.Library.PostgrexTypes
+    # use db connection from the Phoenix app if it's loaded
+    exred_db = Application.get_env :exred, Exred.Repo
+    db_conn = if exred_db do
+      exred_db
+    else
+      db_conn = Application.get_env :exred_library, :psql_conn
+    end
+    hostname = Keyword.get db_conn, :hostname
+    username = Keyword.get db_conn, :username
+    password = Keyword.get db_conn, :password
+    database = Keyword.get db_conn, :database
+    
+    Postgrex.start_link hostname: hostname, username: username, password: password, database: database, types: Exred.Library.PostgrexTypes
   end
 
   def handle_call({:query, query, params}, _from, pid) do
