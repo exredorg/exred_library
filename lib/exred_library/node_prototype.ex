@@ -91,12 +91,12 @@ defmodule Exred.Library.NodePrototype do
 
       @impl true
       def init([node_id, node_config]) do
-        state = %{node_id: node_id, config: node_config, node_data: %{}, out_nodes: []}
-        |> node_init()
-
-        {:ok, state}
+        default_state = %{node_id: node_id, config: node_config, node_data: %{}, out_nodes: []}
+        case node_init(default_state) do
+          {state, timeout} -> {:ok, state, timeout}
+          state            -> {:ok, state}
+        end
       end
-
 
       @impl true
       def handle_call(:get_state, _from, state) do
