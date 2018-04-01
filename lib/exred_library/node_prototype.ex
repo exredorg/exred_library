@@ -136,10 +136,12 @@ defmodule Exred.Library.NodePrototype do
       
       @impl true
       def terminate(reason, state) do 
-        Logger.debug "node: #{state.node_id} #{get_in(state.config, [:name, :value])} TERMINATING"
         event = "notification"
         debug_data = %{exit_reason: Exception.format_exit(reason)}
         event_msg = %{node_id: state.node_id, node_name: @name, debug_data: debug_data}
+
+        Logger.error "node: #{state.node_id} #{get_in(state.config, [:name, :value])} TERMINATING due to: #{inspect debug_data}"
+
         EventChannelClient.broadcast event, event_msg
         :return_value_ignored
       end
