@@ -40,6 +40,7 @@ defmodule Exred.Library.NodePrototype do
       IO.inspect "Compiling node prototype: #{__MODULE__}"
       
       alias Exred.Scheduler.EventChannelClient
+      require Logger
 
       @behaviour Exred.Library.NodePrototype
 
