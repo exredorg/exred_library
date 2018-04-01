@@ -68,6 +68,7 @@ defmodule Exred.Library.NodePrototype do
 
       # API
       def start_link([node_id, node_config]) do
+        Logger.debug "node: #{node_id} #{get_in(node_config, [:name, :value])} START_LINK"
         GenServer.start_link(__MODULE__, [node_id, node_config], name: node_id)
       end
 
@@ -91,11 +92,16 @@ defmodule Exred.Library.NodePrototype do
 
       @impl true
       def init([node_id, node_config]) do
+        Logger.debug "node: #{node_id} #{get_in(node_config, [:name, :value])} INIT"
+        
         default_state = %{node_id: node_id, config: node_config, node_data: %{}, out_nodes: []}
-        IO.puts "NODE PROTOTYPE INIT"
         case node_init(default_state) do
-          {state, timeout} -> {:ok, state, timeout}
-          state            -> {:ok, state}
+          {state, timeout} -> 
+            Logger.debug "node: #{node_id} #{get_in(node_config, [:name, :value])} INIT timeout: #{inspect timeout}"
+            {:ok, state, timeout}
+          state ->
+            Logger.debug "node: #{node_id} #{get_in(node_config, [:name, :value])} INIT no timeout"
+            {:ok, state}
         end
       end
 
@@ -119,6 +125,7 @@ defmodule Exred.Library.NodePrototype do
 
       @impl true
       def handle_info(msg, state) do
+        Logger.debug "node: #{state.node_id} #{get_in(state.config, [:name, :value])} GOT: #{inspect msg}"
         {msg_out, new_state} = handle_msg(msg, state)
         if msg_out != nil do
           Enum.each state.out_nodes, & send(&1, msg_out)
@@ -128,6 +135,7 @@ defmodule Exred.Library.NodePrototype do
       
       @impl true
       def terminate(reason, state) do 
+        Logger.debug "node: #{state.node_id} #{get_in(state.config, [:name, :value])} TERMINATING"
         event = "notification"
         debug_data = %{exit_reason: Exception.format_exit(reason)}
         event_msg = %{node_id: state.node_id, node_name: @name, debug_data: debug_data}
