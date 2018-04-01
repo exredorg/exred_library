@@ -92,6 +92,7 @@ defmodule Exred.Library.NodePrototype do
       @impl true
       def init([node_id, node_config]) do
         default_state = %{node_id: node_id, config: node_config, node_data: %{}, out_nodes: []}
+        IO.puts "NODE PROTOTYPE INIT"
         case node_init(default_state) do
           {state, timeout} -> {:ok, state, timeout}
           state            -> {:ok, state}
