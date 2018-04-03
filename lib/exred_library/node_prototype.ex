@@ -25,6 +25,7 @@ defmodule Exred.Library.NodePrototype do
   @ui_attributes %{fire_button: false, left_icon: "thumb_up", right_icon: nil }
 
 
+  # TODO: prepare/0 is not used, get rid of it?
   @doc """
   This gets called when the module is loaded.
   It should set up set up services that the node needs
@@ -45,12 +46,17 @@ defmodule Exred.Library.NodePrototype do
       @behaviour Exred.Library.NodePrototype
 
       def attributes do
+        config_order = if Keyword.keyword?(@category) do
+          Keyword.keys(@category)
+        else
+          Map.keys(@category)
+        end
         %{
           name: @name,
-          category: @category,
+          category: Enum.into(@category, %{}),
           info: @info,
           config: @config,
-          ui_attributes: @ui_attributes
+          ui_attributes: Enum.into(@ui_attributes, %{config_order: config_order}),
         }
       end
 
@@ -95,6 +101,9 @@ defmodule Exred.Library.NodePrototype do
       def init([node_id, node_config]) do
         Logger.debug "node: #{node_id} #{get_in(node_config, [:name, :value])} INIT"
         
+        # trap exits to make sure terminate/2 gets called by GenServer
+        Process.flag :trap_exit, true
+
         default_state = %{node_id: node_id, config: node_config, node_data: %{}, out_nodes: []}
         case node_init(default_state) do
           {state, timeout} -> 
