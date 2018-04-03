@@ -46,10 +46,10 @@ defmodule Exred.Library.NodePrototype do
       @behaviour Exred.Library.NodePrototype
 
       def attributes do
-        config_order = if Keyword.keyword?(@category) do
-          Keyword.keys(@category)
+        config_order = if Keyword.keyword?(@config) do
+          Keyword.keys(@config)
         else
-          Map.keys(@category)
+          Map.keys(@config)
         end
         %{
           name: @name,
