@@ -53,9 +53,9 @@ defmodule Exred.Library.NodePrototype do
         end
         %{
           name: @name,
-          category: Enum.into(@category, %{}),
+          category: @category,
           info: @info,
-          config: @config,
+          config: Enum.into(@config, %{}),
           ui_attributes: Enum.into(@ui_attributes, %{config_order: config_order}),
         }
       end
