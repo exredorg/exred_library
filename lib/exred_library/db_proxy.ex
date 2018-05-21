@@ -21,7 +21,7 @@ defmodule Exred.Library.DbProxy do
 
   def init(_args) do
     # use db connection from the Phoenix app if it's loaded
-    exred_db = Application.get_env :exred, Exred.Repo
+    exred_db = Application.get_env :exred_ui, ExredUI.Repo
     db_conn = if exred_db do
       exred_db
     else
@@ -45,6 +45,5 @@ defmodule Exred.Library.DbProxy do
         {:reply, {:error, err}, pid}
     end
   end
-
 
 end
