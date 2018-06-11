@@ -22,7 +22,8 @@ defmodule Exred.Library.Mixfile do
     [
       {:jason, "~> 1.0"},
       {:postgrex, "~> 0.13.4"},
-      {:uuid, "~> 1.1"}
+      {:uuid, "~> 1.1"},
+      {:conform, "~> 2.2"}
     ]
   end
 end

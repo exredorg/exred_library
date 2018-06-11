@@ -31,7 +31,8 @@ use Mix.Config
 
 # Configure your database
 config :exred_library, :psql_conn,
-  username: "",
-  password: "",
-  database: "exred_dev",
-  hostname: "localhost"
+  username: "exred_user",
+  password: "hello",
+  database: "exred_ui_dev",
+  hostname: "localhost",
+  port: 5432
