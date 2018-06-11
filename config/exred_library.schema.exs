@@ -23,7 +23,7 @@
       commented: false,
       datatype: :binary,
       default: "exred_ui_dev",
-      doc: "Provide documentation for exred_library.psql_conn.database here.",
+      doc: "DB name",
       hidden: false,
       env_var: "EXRED_DB_NAME",
       to: "exred_library.psql_conn.database"
