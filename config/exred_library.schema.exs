@@ -2,7 +2,7 @@
   extends: [],
   import: [],
   mappings: [
-    "exred.db.username": [
+    "exred_library.psql_conn.username": [
       commented: false,
       datatype: :binary,
       default: "exred_user",
@@ -11,7 +11,7 @@
       env_var: "EXRED_DB_USERNAME",
       to: "exred_library.psql_conn.username"
     ],
-    "exred.db.password": [
+    "exred_library.psql_conn.password": [
       commented: false,
       datatype: :binary,
       doc: "DB password",
@@ -19,7 +19,7 @@
       env_var: "EXRED_DB_PASSWORD",
       to: "exred_library.psql_conn.password"
     ],
-    "exred.db.database": [
+    "exred_library.psql_conn.database": [
       commented: false,
       datatype: :binary,
       default: "exred_ui_dev",
@@ -28,7 +28,7 @@
       env_var: "EXRED_DB_NAME",
       to: "exred_library.psql_conn.database"
     ],
-    "exred.db.hostname": [
+    "exred_library.psql_conn.hostname": [
       commented: false,
       datatype: :binary,
       default: "localhost",
@@ -37,7 +37,7 @@
       env_var: "EXRED_DB_HOSTNAME",
       to: "exred_library.psql_conn.hostname"
     ],
-    "exred.db.port": [
+    "exred_library.psql_conn.port": [
       commented: false,
       datatype: :integer,
       default: 5432,
