@@ -134,14 +134,20 @@ defmodule Exred.Library.NodePrototype do
 
 
       @impl true
-      def handle_info(msg, state) do
+      def handle_info({:exred_msg, msg}, state) do
         Logger.debug "node: #{state.node_id} #{get_in(state.config, [:name, :value])} GOT: #{inspect msg}"
         {msg_out, new_state} = handle_msg(msg, state)
         if msg_out != nil do
-          Enum.each state.out_nodes, & send(&1, msg_out)
+          Enum.each state.out_nodes, & send(&1, {:exred_msg, msg_out})
         end
         {:noreply, new_state}
       end
+      
+      def handle_info(msg, state) do
+        Logger.debug "UNHANDLED node: #{state.node_id} #{get_in(state.config, [:name, :value])} GOT: #{inspect msg}"
+        {:noreply, state}
+      end
+      
       
       @impl true
       def terminate(reason, state) do 
