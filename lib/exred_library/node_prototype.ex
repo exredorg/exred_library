@@ -145,7 +145,7 @@ defmodule Exred.Library.NodePrototype do
       
       def handle_info(:timeout, state) do
         Logger.debug "node: #{state.node_id} #{get_in(state.config, [:name, :value])} GOT: :timeout"
-        {msg_out, new_state} = handle_msg(msg, state)
+        {msg_out, new_state} = handle_msg(:timeout, state)
         if msg_out != nil do
           Enum.each state.out_nodes, & send(&1, {:exred_msg, msg_out})
         end
