@@ -223,7 +223,6 @@ Needs to return the updated state.
 If the fire action needs to send an outgoing message from the node that can be done with the standard `send/2` function.  
 `state.out_nodes` is a list of node PIDs that are connected to this node with outgoing edges.
 
-The message format is `{:exred_msg, msg :: map}`.
 
 Example:
 ```elixir
