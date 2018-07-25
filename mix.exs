@@ -1,12 +1,16 @@
 defmodule Exred.Library.Mixfile do
   use Mix.Project
 
+  @description "Library application for Exred. Handles storage and access of flows."
+
   def project do
     [
       app: :exred_library,
       version: "0.1.11",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
+      description: @description,
+      package: package(),
       deps: deps()
     ]
   end
@@ -23,7 +27,20 @@ defmodule Exred.Library.Mixfile do
       {:jason, "~> 1.0"},
       {:postgrex, "~> 0.13.4"},
       {:uuid, "~> 1.1"},
-      {:conform, "~> 2.2"}
+      {:conform, "~> 2.2"},
+      {:ex_doc, "~> 0.18.0", only: :dev, runtime: false}
     ]
+  end
+  
+  defp package do
+    %{
+      licenses: ["MIT"],
+      maintainers: ["Zsolt Keszthelyi"],
+      links: %{
+        "GitHub" => "https://github.com/exredorg/exred_library",
+        "Exred" => "http://exred.org"
+      },
+      files: ["lib", "mix.exs", "README.md", "LICENSE"]
+    }
   end
 end

@@ -1,6 +1,6 @@
 defmodule Exred.Library do
   @moduledoc """
-  Documentation for Exred.Library.
+  Library application for Exred. Handles storage and access of flows.
   """
   
   alias Exred.Library.DbProxy
