@@ -6,7 +6,7 @@ defmodule Exred.Library.Mixfile do
   def project do
     [
       app: :exred_library,
-      version: "0.1.11",
+      version: "0.1.12",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
       description: @description,
@@ -26,12 +26,12 @@ defmodule Exred.Library.Mixfile do
     [
       {:jason, "~> 1.0"},
       {:postgrex, "~> 0.13.4"},
-      {:uuid, "~> 1.1"},
+      {:elixir_uuid, "~> 1.2"},
       {:conform, "~> 2.2"},
       {:ex_doc, "~> 0.18.0", only: :dev, runtime: false}
     ]
   end
-  
+
   defp package do
     %{
       licenses: ["MIT"],
