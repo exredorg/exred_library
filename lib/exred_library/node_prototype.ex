@@ -4,12 +4,12 @@ defmodule Exred.Library.NodePrototype do
   ```elixir
   defmodule Exred.Node.HelloWorld do
     @moduledoc \"""
-    Sends "Hello World" or any other configured greeting as payload 
+    Sends "Hello World" or any other configured greeting as payload
     when it receives a message.
 
-    **Incoming message format**  
+    **Incoming message format**
     Anything / ignored
-    
+
     **Outgoing message format**
     msg = %{
       payload :: string
@@ -22,45 +22,45 @@ defmodule Exred.Library.NodePrototype do
     @config %{
       name: %{
         info: "Visible node name",
-        value: @name, 
-        type: "string", 
+        value: @name,
+        type: "string",
         attrs: %{max: 20}
       },
       greeting: %{
         info: "Greeting to be sent",
-        value: "Hello World", 
-        type: "string", 
+        value: "Hello World",
+        type: "string",
         attrs: %{max: 40}
       }
     }
     @ui_attributes %{
       left_icon: "face"
     }
-    
+
     use Exred.Library.NodePrototype
-    
+
     @impl true
     def handle_msg(msg, state) do
       out = Map.put(msg, :payload, state.config.greeting.value)
       {out, state}
-    end 
+    end
   end
   ```
 
   ### Module Attributes
 
-  __@name :: string__  
+  __@name :: string__
   Name of the node. This will be the visible name in the UI.
 
-  __@category :: string__  
+  __@category :: string__
   Name of the category the node is in. Categories are the panel headers in the node selector on the left side of the UI.
   The name of the category also determines the color of the node given in `exred/ui/app/styles/app.scss` (see .exred-category-function, etc. CSS classes)
 
-  __@info :: string__  
+  __@info :: string__
   Description of the node. This is displayed in the Info tab in the UI.
   It is usually a longer multi-line string and it is interpreted as markdown text.
 
-  __@config :: map__  
+  __@config :: map__
   This is a map of configurable values for the node.
   These are displayed in the Config tab in the UI and the values are accessible in the `state` argument in the node.
 
@@ -75,7 +75,7 @@ defmodule Exred.Library.NodePrototype do
   - attrs :: map : map of attributes based on the type
 
 
-  #### type: "string" 
+  #### type: "string"
   ```elixir
   config_item: %{
     type: "string",
@@ -115,7 +115,7 @@ defmodule Exred.Library.NodePrototype do
   ```elixir
   config_item: %{
     info: "Short description",
-    type: "list-singleselect", 
+    type: "list-singleselect",
     value: [],
     attrs: %{items: ["Display 1", "Display 2"]}
   },
@@ -151,19 +151,19 @@ defmodule Exred.Library.NodePrototype do
   @config %{
     name: %{
       info: "Visible node name",
-      value: "GPIO In", 
-      type: "string", 
+      value: "GPIO In",
+      type: "string",
       attrs: %{max: 20}
     },
     pin_number: %{
       info: "GPIO pin number that the node will read",
-      value: 0, 
-      type: "number", 
+      value: 0,
+      type: "number",
       attrs: %{min: 0}
     },
     mode: %{
       info: "read_on_message or monitor",
-      type: "list-singleselect", 
+      type: "list-singleselect",
       value: nil,
       attrs: %{items: ["read_on_message", "monitor"]}
     },
@@ -176,7 +176,7 @@ defmodule Exred.Library.NodePrototype do
   }
   ```
 
-  __@ui_attributes__  
+  __@ui_attributes__
   Additional UI attributes for the node.
   ```elixir
   @ui_attributes %{
@@ -187,7 +187,7 @@ defmodule Exred.Library.NodePrototype do
   }
   ```
   - fire_button :: boolean :  clickable button on the node in the UI. Sends a fire message to the node's gen_server
-  - left_icon :: string, right_icon :: string : material design icon name (see [Material Design Icons](https://material.io/tools/icons/?style=baseline)) 
+  - left_icon :: string, right_icon :: string : material design icon name (see [Material Design Icons](https://material.io/tools/icons/?style=baseline))
   - config_order :: list : list of the config items in the order we want to display them in the UI
 
   ### Module Callbacks
@@ -215,7 +215,7 @@ defmodule Exred.Library.NodePrototype do
   Called when the fire button is pressed on the node in the UI.
   Needs to return the updated state.
 
-  If the fire action needs to send an outgoing message from the node that can be done with the standard `send/2` function.  
+  If the fire action needs to send an outgoing message from the node that can be done with the standard `send/2` function.
   `state.out_nodes` is a list of node PIDs that are connected to this node with outgoing edges.
 
 
@@ -231,15 +231,13 @@ defmodule Exred.Library.NodePrototype do
   [Link to node in github]()
   """
 
-
   @name "NodePrototype"
   @category "Undefined"
   @config %{}
   @info @moduledoc
 
   # icon names are the standard material design icons
-  @ui_attributes %{fire_button: false, left_icon: "thumb_up", right_icon: nil }
-
+  @ui_attributes %{fire_button: false, left_icon: "thumb_up", right_icon: nil}
 
   # TODO: prepare/0 is not used, get rid of it?
   @doc """
@@ -247,8 +245,8 @@ defmodule Exred.Library.NodePrototype do
   It should set up set up services that the node needs
   (autheticate with an API or set up database access)
   """
-  #@callback prepare() :: list
-  
+  # @callback prepare() :: list
+
   @doc """
   Initialize node.
   This is called as the last step of the node's init function.
@@ -261,44 +259,46 @@ defmodule Exred.Library.NodePrototype do
 
   defmacro __using__(_opts) do
     quote do
-      IO.inspect "Compiling node prototype: #{__MODULE__}"
-      
-      alias Exred.Scheduler.EventChannelClient
+      IO.inspect("Compiling node prototype: #{__MODULE__}")
+
+      alias Exred.Scheduler.EventChannel
       require Logger
 
       @behaviour Exred.Library.NodePrototype
 
       def attributes do
-        config_order = if Keyword.keyword?(@config) do
-          Keyword.keys(@config)
-        else
-          Map.keys(@config)
-        end
+        config_order =
+          if Keyword.keyword?(@config) do
+            Keyword.keys(@config)
+          else
+            Map.keys(@config)
+          end
+
         %{
           name: @name,
           category: @category,
           info: @info,
           config: Enum.into(@config, %{}),
-          ui_attributes: Enum.into(@ui_attributes, %{config_order: config_order}),
+          ui_attributes: Enum.into(@ui_attributes, %{config_order: config_order})
         }
       end
 
       def prepare(), do: [prepare: :done]
       def node_init(state), do: state
       def handle_msg(msg, state), do: {msg, state}
+
       def fire(state) do
-        IO.puts "#{inspect self()} firing: #{inspect state.node_id}"
+        IO.puts("#{inspect(self())} firing: #{inspect(state.node_id)}")
         state
       end
 
       defoverridable prepare: 0, node_init: 1, handle_msg: 2, fire: 1
 
-
       use GenServer
 
       # API
       def start_link([node_id, node_config]) do
-        Logger.debug "node: #{node_id} #{get_in(node_config, [:name, :value])} START_LINK"
+        Logger.debug("node: #{node_id} #{get_in(node_config, [:name, :value])} START_LINK")
         GenServer.start_link(__MODULE__, [node_id, node_config], name: node_id)
       end
 
@@ -309,7 +309,7 @@ defmodule Exred.Library.NodePrototype do
       def set_out_nodes(pid, out_nodes) do
         GenServer.call(pid, {:set_out_nodes, out_nodes})
       end
-      
+
       def add_out_node(pid, new_out) do
         GenServer.call(pid, {:add_out_node, new_out})
       end
@@ -322,18 +322,28 @@ defmodule Exred.Library.NodePrototype do
 
       @impl true
       def init([node_id, node_config]) do
-        Logger.debug "node: #{node_id} #{get_in(node_config, [:name, :value])} INIT"
-        
+        Logger.debug("node: #{node_id} #{get_in(node_config, [:name, :value])} INIT")
+
         # trap exits to make sure terminate/2 gets called by GenServer
-        Process.flag :trap_exit, true
+        Process.flag(:trap_exit, true)
 
         default_state = %{node_id: node_id, config: node_config, node_data: %{}, out_nodes: []}
+
         case node_init(default_state) do
-          {state, timeout} -> 
-            Logger.debug "node: #{node_id} #{get_in(node_config, [:name, :value])} INIT timeout: #{inspect timeout}"
+          {state, timeout} ->
+            Logger.debug(
+              "node: #{node_id} #{get_in(node_config, [:name, :value])} INIT timeout: #{
+                inspect(timeout)
+              }"
+            )
+
             {:ok, state, timeout}
+
           state ->
-            Logger.debug "node: #{node_id} #{get_in(node_config, [:name, :value])} INIT no timeout"
+            Logger.debug(
+              "node: #{node_id} #{get_in(node_config, [:name, :value])} INIT no timeout"
+            )
+
             {:ok, state}
         end
       end
@@ -346,7 +356,7 @@ defmodule Exred.Library.NodePrototype do
       def handle_call({:set_out_nodes, out_nodes}, _from, state) do
         {:reply, :ok, state |> Map.put(:out_nodes, out_nodes)}
       end
-      
+
       def handle_call({:add_out_node, new_out}, _from, %{out_nodes: out_nodes} = state) do
         {:reply, :ok, %{state | out_nodes: [new_out | out_nodes]}}
       end
@@ -355,35 +365,46 @@ defmodule Exred.Library.NodePrototype do
         {:reply, :ok, fire(state)}
       end
 
-
       @impl true
       def handle_info(msg, state) do
-        Logger.debug "]node: #{state.node_id} #{get_in(state.config, [:name, :value])} GOT: #{inspect msg}"
+        Logger.debug(
+          "]node: #{state.node_id} #{get_in(state.config, [:name, :value])} GOT: #{inspect(msg)}"
+        )
+
         {msg_out, new_state} = handle_msg(msg, state)
+
         if msg_out != nil do
-          Enum.each state.out_nodes, & send(&1, msg_out)
+          Enum.each(state.out_nodes, &send(&1, msg_out))
         end
+
         {:noreply, new_state}
       end
 
       def handle_info(msg, state) do
-        Logger.debug "UNHANDLED node: #{state.node_id} #{get_in(state.config, [:name, :value])} GOT: #{inspect msg}"
+        Logger.debug(
+          "UNHANDLED node: #{state.node_id} #{get_in(state.config, [:name, :value])} GOT: #{
+            inspect(msg)
+          }"
+        )
+
         {:noreply, state}
       end
-      
-      
+
       @impl true
-      def terminate(reason, state) do 
+      def terminate(reason, state) do
         event = "notification"
         debug_data = %{exit_reason: Exception.format_exit(reason)}
-        event_msg = %{node_id: state.node_id, node_name: @name, debug_data: debug_data}
+        payload = %{node_id: state.node_id, node_name: @name, debug_data: debug_data}
 
-        Logger.error "node: #{state.node_id} #{get_in(state.config, [:name, :value])} TERMINATING due to: #{inspect debug_data}"
+        Logger.error(
+          "node: #{state.node_id} #{get_in(state.config, [:name, :value])} TERMINATING due to: #{
+            inspect(debug_data)
+          }"
+        )
 
-        EventChannelClient.broadcast event, event_msg
+        EventChannel.send(event, payload)
         :return_value_ignored
       end
     end
   end
-
 end
