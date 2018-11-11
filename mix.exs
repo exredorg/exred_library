@@ -7,7 +7,7 @@ defmodule Exred.Library.Mixfile do
     [
       app: :exred_library,
       version: "0.1.2",
-      elixir: "~> 1.5",
+      elixir: "~> 1.7",
       start_permanent: Mix.env == :prod,
       description: @description,
       package: package(),
@@ -28,7 +28,7 @@ defmodule Exred.Library.Mixfile do
       {:postgrex, "~> 0.13.4"},
       {:elixir_uuid, "~> 1.2"},
       {:conform, "~> 2.2"},
-      {:ex_doc, "~> 0.18.0", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.19.0", only: :dev, runtime: false}
     ]
   end
 
