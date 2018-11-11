@@ -408,7 +408,7 @@ defmodule Exred.Library.NodePrototype do
         )
 
         # EventChannel.send(event, payload)
-        state.send_event(event, payload)
+        state.send_event.(event, payload)
         :return_value_ignored
       end
     end
