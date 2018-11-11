@@ -6,7 +6,7 @@ defmodule Exred.Library.Mixfile do
   def project do
     [
       app: :exred_library,
-      version: "0.1.12",
+      version: "0.1.2",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
       description: @description,

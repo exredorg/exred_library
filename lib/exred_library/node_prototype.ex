@@ -261,7 +261,6 @@ defmodule Exred.Library.NodePrototype do
     quote do
       IO.inspect("Compiling node prototype: #{__MODULE__}")
 
-      alias Exred.Scheduler.EventChannel
       require Logger
 
       @behaviour Exred.Library.NodePrototype
@@ -297,9 +296,9 @@ defmodule Exred.Library.NodePrototype do
       use GenServer
 
       # API
-      def start_link([node_id, node_config]) do
+      def start_link([node_id, node_config, send_event]) do
         Logger.debug("node: #{node_id} #{get_in(node_config, [:name, :value])} START_LINK")
-        GenServer.start_link(__MODULE__, [node_id, node_config], name: node_id)
+        GenServer.start_link(__MODULE__, [node_id, node_config, send_event], name: node_id)
       end
 
       def get_state(pid) do
@@ -321,13 +320,19 @@ defmodule Exred.Library.NodePrototype do
       # Callbacks
 
       @impl true
-      def init([node_id, node_config]) do
+      def init([node_id, node_config, send_event]) do
         Logger.debug("node: #{node_id} #{get_in(node_config, [:name, :value])} INIT")
 
         # trap exits to make sure terminate/2 gets called by GenServer
         Process.flag(:trap_exit, true)
 
-        default_state = %{node_id: node_id, config: node_config, node_data: %{}, out_nodes: []}
+        default_state = %{
+          node_id: node_id,
+          config: node_config,
+          node_data: %{},
+          out_nodes: [],
+          send_event: send_event
+        }
 
         case node_init(default_state) do
           {state, timeout} ->
@@ -368,7 +373,7 @@ defmodule Exred.Library.NodePrototype do
       @impl true
       def handle_info(msg, state) do
         Logger.debug(
-          "]node: #{state.node_id} #{get_in(state.config, [:name, :value])} GOT: #{inspect(msg)}"
+          "node: #{state.node_id} #{get_in(state.config, [:name, :value])} GOT: #{inspect(msg)}"
         )
 
         {msg_out, new_state} = handle_msg(msg, state)
@@ -382,7 +387,7 @@ defmodule Exred.Library.NodePrototype do
 
       def handle_info(msg, state) do
         Logger.debug(
-          "UNHANDLED node: #{state.node_id} #{get_in(state.config, [:name, :value])} GOT: #{
+          "UNHANDLED msg: #{state.node_id} #{get_in(state.config, [:name, :value])} GOT: #{
             inspect(msg)
           }"
         )
@@ -402,7 +407,8 @@ defmodule Exred.Library.NodePrototype do
           }"
         )
 
-        EventChannel.send(event, payload)
+        # EventChannel.send(event, payload)
+        state.send_event(event, payload)
         :return_value_ignored
       end
     end
