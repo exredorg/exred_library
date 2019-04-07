@@ -25,7 +25,8 @@ defmodule Exred.Library.Mixfile do
   defp deps do
     [
       {:jason, "~> 1.0"},
-      {:postgrex, "~> 0.13.4"},
+      {:poison, "~> 2.2"},
+      {:sqlite_ecto2, "~> 2.2"},
       {:elixir_uuid, "~> 1.2"},
       {:conform, "~> 2.2"},
       {:ex_doc, "~> 0.19.0", only: :dev, runtime: false}
